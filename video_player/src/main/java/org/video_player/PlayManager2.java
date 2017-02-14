@@ -1,37 +1,30 @@
 package org.video_player;
 
-import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.text.TextUtils;
-import android.view.SurfaceHolder;
-
-import java.io.IOException;
-
 /**
  * Created by wuyr on 12/3/16 5:53 PM.
  */
 
-public class PlayManager {
+public class PlayManager2 {
 
-    private volatile static PlayManager mInstance;
-    private MediaPlayer mPlayer;
+   /* private volatile static PlayManager2 mInstance;
+    private SimpleExoPlayer mPlayer;
     private PlayListener mListener, mFullScreenListener;
     private PlayStatus mStatus = PlayStatus.NORMAL;
-    private VideoPlayer.Status mPlayerData;
-    private VideoPlayer mVideoPlayer;
+    private VideoPlayer2.Status mPlayerData;
+    private VideoPlayer2 mVideoPlayer2;
 
-    private PlayManager() {
-        mPlayer = new MediaPlayer();
+    private PlayManager2(Context context) {
+        mPlayer = ExoPlayerFactory.newSimpleInstance(context, new DefaultTrackSelector(
+                new AdaptiveVideoTrackSelection.Factory(new DefaultBandwidthMeter())),
+                new DefaultLoadControl());
     }
 
-    public static PlayManager getInstance() {
+    public static PlayManager2 getInstance(Context context) {
         LogUtil.print("get play manager instance");
         if (mInstance == null)
-            synchronized (PlayManager.class) {
+            synchronized (PlayManager2.class) {
                 if (mInstance == null)
-                    mInstance = new PlayManager();
+                    mInstance = new PlayManager2(context);
             }
         return mInstance;
     }
@@ -39,7 +32,7 @@ public class PlayManager {
     void prepareAsync(final Context context, final String url) {
         LogUtil.print("prepareAsync");
         if (TextUtils.isEmpty(url)) {
-            if (VideoPlayer.isFullScreenNow()) {
+            if (VideoPlayer2.isFullScreenNow()) {
                 if (mFullScreenListener != null)
                     mFullScreenListener.onError(0, 0);
             } else if (mListener != null)
@@ -47,14 +40,28 @@ public class PlayManager {
             return;
         }
         mPlayer.release();
-        mPlayer = new MediaPlayer();
+        mPlayer = ExoPlayerFactory.newSimpleInstance(context, new DefaultTrackSelector(
+                        new AdaptiveVideoTrackSelection.Factory(new DefaultBandwidthMeter())),
+                new DefaultLoadControl());
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mPlayer.setDataSource(context, Uri.parse(url));
+        // Measures bandwidth during playback. Can be null if not required.
+        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+// Produces DataSource instances through which media data is loaded.
+        DataSource.Factory dataSourceFactory = new DefaultHttpDataSourceFactory(
+                Util.getUserAgent(context, "lvu"), bandwidthMeter);
+// Produces Extractor instances for parsing the media data.
+        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+// This is the MediaSource representing the media to be played.
+        MediaSource videoSource = new ExtractorMediaSource(Uri.parse(url),
+                dataSourceFactory, extractorsFactory, null, null);
+// Prepare the player with the source.
+        mPlayer.prepare(videoSource);
+        *try {
+            *mPlayer.setDataSource(context, Uri.parse(url));
             mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer iMediaPlayer) {
-                    if (VideoPlayer.isFullScreenNow()) {
+                    if (VideoPlayer2.isFullScreenNow()) {
                         if (mFullScreenListener != null)
                             mFullScreenListener.onPrepared();
                     } else if (mListener != null)
@@ -64,7 +71,7 @@ public class PlayManager {
             mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer iMediaPlayer) {
-                    if (VideoPlayer.isFullScreenNow()) {
+                    if (VideoPlayer2.isFullScreenNow()) {
                         if (mFullScreenListener != null)
                             mFullScreenListener.onCompletion();
                     } else if (mListener != null)
@@ -74,7 +81,7 @@ public class PlayManager {
             mPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
                 @Override
                 public void onBufferingUpdate(MediaPlayer iMediaPlayer, int i) {
-                    if (VideoPlayer.isFullScreenNow()) {
+                    if (VideoPlayer2.isFullScreenNow()) {
                         if (mFullScreenListener != null)
                             mFullScreenListener.onBufferingUpdate(i);
                     } else if (mListener != null)
@@ -84,7 +91,7 @@ public class PlayManager {
             mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer iMediaPlayer, int i, int i1) {
-                    if (VideoPlayer.isFullScreenNow()) {
+                    if (VideoPlayer2.isFullScreenNow()) {
                         if (mFullScreenListener != null)
                             mFullScreenListener.onError(i, i1);
                     } else if (mListener != null)
@@ -126,7 +133,7 @@ public class PlayManager {
         if (mPlayer.isPlaying())
             mPlayer.stop();
         mStatus = PlayStatus.NORMAL;
-        if (VideoPlayer.isFullScreenNow()) {
+        if (VideoPlayer2.isFullScreenNow()) {
             if (mFullScreenListener != null)
                 mFullScreenListener.onCompletion();
         } else if (mListener != null)
@@ -179,22 +186,22 @@ public class PlayManager {
         mFullScreenListener = listener;
     }
 
-    void setPlayerData(VideoPlayer.Status data) {
+    void setPlayerData(VideoPlayer2.Status data) {
         mPlayerData = data;
     }
 
-    VideoPlayer.Status getPlayerData() {
+    VideoPlayer2.Status getPlayerData() {
         return mPlayerData;
     }
 
 
-    void setCurrentPlayer(VideoPlayer videoPlayer) {
-        if (mVideoPlayer != videoPlayer)
-            mVideoPlayer = videoPlayer;
+    void setCurrentPlayer(VideoPlayer2 videoPlayer) {
+        if (mVideoPlayer2 != videoPlayer)
+            mVideoPlayer2 = videoPlayer;
     }
 
-    VideoPlayer getLastPlayer() {
-        return mVideoPlayer;
+    VideoPlayer2 getLastPlayer() {
+        return mVideoPlayer2;
     }
 
     interface PlayListener {
@@ -221,5 +228,5 @@ public class PlayManager {
 
     enum PlayStatus {
         PREPARING, PAUSE, PLAYING, NORMAL, ERROR
-    }
+    }*/
 }

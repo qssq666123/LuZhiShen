@@ -10,10 +10,6 @@ android {
         targetSdkVersion 25
         versionCode 7
         versionName "1.7"
-        ndk {
-            //设置支持的SO库架构
-            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
-        }
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -27,9 +23,15 @@ android {
             maven { url "https://jitpack.io" }
         }
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
-def supportVersion = "25.1.0"
+def supportVersion = "25.1.1"
 def frescoVersion = "1.0.1"
 //def torrentStreamVersion = "2.1.0"
 

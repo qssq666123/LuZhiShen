@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
@@ -31,6 +32,7 @@ import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
  */
 public class ErrorActivity extends BaseActivity {
 
+    private static final String TAG = "ErrorActivity";
     private View mBottomView;
     private Toolbar mToolbar;
 
@@ -40,6 +42,7 @@ public class ErrorActivity extends BaseActivity {
         setContentView(R.layout.activity_error_view);
         initViews();
         initImmerse();
+        Log.e(TAG, CustomActivityOnCrash.getAllErrorDetailsFromIntent(ErrorActivity.this, getIntent()));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -111,18 +114,10 @@ public class ErrorActivity extends BaseActivity {
     }
 
     private void copyErrorToClipboard() {
-        String errorInformation =
-                CustomActivityOnCrash.getAllErrorDetailsFromIntent(ErrorActivity.this, getIntent());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText(getString(cat.ereza.customactivityoncrash.R.string.customactivityoncrash_error_activity_error_details_clipboard_label), errorInformation);
-            clipboard.setPrimaryClip(clip);
-        } else {
-            //noinspection deprecation
-            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            clipboard.setText(errorInformation);
-        }
+        String errorInformation = CustomActivityOnCrash.getAllErrorDetailsFromIntent(ErrorActivity.this, getIntent());
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(getString(cat.ereza.customactivityoncrash.R.string.customactivityoncrash_error_activity_error_details_clipboard_label), errorInformation);
+        clipboard.setPrimaryClip(clip);
     }
 
     private void initImmerse() {

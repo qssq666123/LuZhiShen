@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Lvu.iml" filepath="$PROJECT_DIR$/Lvu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LuZhiShen.iml" filepath="$PROJECT_DIR$/LuZhiShen.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/video_player/video_player.iml" filepath="$PROJECT_DIR$/video_player/video_player.iml" />
     </modules>

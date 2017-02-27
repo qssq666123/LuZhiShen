@@ -46,7 +46,10 @@ public class PlayManager {
                 mListener.onError(0, 0);
             return;
         }
-        mPlayer.release();
+        if (mPlayer != null) {
+            mPlayer.release();
+            mPlayer = null;
+        }
         mPlayer = new MediaPlayer();
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
@@ -108,35 +111,51 @@ public class PlayManager {
     }
 
     void play() {
-        if (mPlayer == null) return;
-        if (!mPlayer.isPlaying())
-            mPlayer.start();
-        mStatus = PlayStatus.PLAYING;
+        try {
+            if (mPlayer == null) return;
+            if (!mPlayer.isPlaying())
+                mPlayer.start();
+            mStatus = PlayStatus.PLAYING;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     void pause() {
-        if (mPlayer == null) return;
-        if (mPlayer.isPlaying())
-            mPlayer.pause();
-        mStatus = PlayStatus.PAUSE;
+        try{
+            if (mPlayer == null) return;
+            if (mPlayer.isPlaying())
+                mPlayer.pause();
+            mStatus = PlayStatus.PAUSE;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     void stop() {
-        if (mPlayer == null) return;
-        if (mPlayer.isPlaying())
-            mPlayer.stop();
-        mStatus = PlayStatus.NORMAL;
-        if (VideoPlayer.isFullScreenNow()) {
-            if (mFullScreenListener != null)
-                mFullScreenListener.onCompletion();
-        } else if (mListener != null)
-            mListener.onCompletion();
+        try{
+            if (mPlayer == null) return;
+            if (mPlayer.isPlaying())
+                mPlayer.stop();
+            mStatus = PlayStatus.NORMAL;
+            if (VideoPlayer.isFullScreenNow()) {
+                if (mFullScreenListener != null)
+                    mFullScreenListener.onCompletion();
+            } else if (mListener != null)
+                mListener.onCompletion();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void release() {
-        if (mPlayer == null) return;
-        stop();
-        mPlayer.release();
+        try{
+            if (mPlayer == null) return;
+            stop();
+            mPlayer.release();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     boolean isPlaying() {

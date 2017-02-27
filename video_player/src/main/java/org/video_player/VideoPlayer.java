@@ -156,7 +156,7 @@ public class VideoPlayer extends RelativeLayout {
         mRootView.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (mManager.getPlayStatus() != PLAYING && mManager.getPlayStatus() != PAUSE)
+                if (mManager.getPlayStatus() != PLAYING && mManager.getPlayStatus() != PAUSE && !isFullScreenNow)
                     return false;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:

@@ -41,6 +41,6 @@ dependencies {
             compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.7.5'
             compile 'tv.danmaku.ijk.media:ijkplayer-arm64:0.7.5'
             compile 'tv.danmaku.ijk.media:ijkplayer-x86:0.7.5'*/
-    compile 'com.google.android.exoplayer:exoplayer:r2.2.0'
+    //compile 'com.google.android.exoplayer:exoplayer:r2.2.0'
     testCompile 'junit:junit:4.12'
 }

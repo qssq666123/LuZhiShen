@@ -39,6 +39,7 @@ public class PlayManager {
     void prepareAsync(final Context context, final String url) {
         LogUtil.print("prepareAsync");
         if (TextUtils.isEmpty(url)) {
+            LogUtil.print("error: url is empty");
             if (VideoPlayer.isFullScreenNow()) {
                 if (mFullScreenListener != null)
                     mFullScreenListener.onError(0, 0);
@@ -87,6 +88,7 @@ public class PlayManager {
             mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer iMediaPlayer, int i, int i1) {
+                    LogUtil.print("on listener error");
                     if (VideoPlayer.isFullScreenNow()) {
                         if (mFullScreenListener != null)
                             mFullScreenListener.onError(i, i1);
@@ -102,15 +104,8 @@ public class PlayManager {
         }
     }
 
-    int getVideoWidth() {
-        return mPlayer.getVideoWidth();
-    }
-
-    int getVideoHeight() {
-        return mPlayer.getVideoHeight();
-    }
-
     void play() {
+        LogUtil.print("on player start play");
         try {
             if (mPlayer == null) return;
             if (!mPlayer.isPlaying())
@@ -122,6 +117,7 @@ public class PlayManager {
     }
 
     void pause() {
+        LogUtil.print("on player pause");
         try{
             if (mPlayer == null) return;
             if (mPlayer.isPlaying())
@@ -133,6 +129,7 @@ public class PlayManager {
     }
 
     void stop() {
+        LogUtil.print("on player stop");
         try{
             if (mPlayer == null) return;
             if (mPlayer.isPlaying())
@@ -149,39 +146,80 @@ public class PlayManager {
     }
 
     public void release() {
+        LogUtil.print("on player release");
         try{
             if (mPlayer == null) return;
             stop();
             mPlayer.release();
+            mPlayer = null;
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
     boolean isPlaying() {
-        return mPlayer != null && mPlayer.isPlaying();
+        try {
+            return mPlayer != null && mPlayer.isPlaying();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
     }
 
     void setDisplay(SurfaceHolder sh, boolean isExitFullScreen) {
         if (mPlayer == null) return;
-        mPlayer.setDisplay(sh);
-        if (mListener != null)
-            mListener.onDisplayChanged(isExitFullScreen);
+        try{
+            mPlayer.setDisplay(sh);
+            if (mListener != null)
+                mListener.onDisplayChanged(isExitFullScreen);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
-    long getDuration() {
-        if (mPlayer == null) return -1;
-        return mPlayer.getDuration();
+    int getVideoWidth() {
+        try {
+            return mPlayer.getVideoWidth();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return 0;
     }
 
-    long getCurrentPosition() {
-        if (mPlayer == null) return -1;
-        return mPlayer.getCurrentPosition();
+    int getVideoHeight() {
+        try {
+            return mPlayer.getVideoHeight();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return 0;
     }
 
-    void seekTo(long position) {
+    int getDuration() {
+        try{
+            return mPlayer.getDuration();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    int getCurrentPosition() {
+        try{
+            return mPlayer.getCurrentPosition();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    void seekTo(int position) {
         if (mPlayer == null) return;
-        mPlayer.seekTo((int) position);
+        try{
+            mPlayer.seekTo(position);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     void setCurrentListener(PlayListener listener) {

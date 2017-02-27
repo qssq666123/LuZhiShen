@@ -156,7 +156,7 @@ public class VideoPlayer extends RelativeLayout {
         mRootView.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (mManager.getPlayStatus() != PLAYING && mManager.getPlayStatus() != PAUSE && !isFullScreenNow)
+                if ((mManager.getPlayStatus() != PLAYING && mManager.getPlayStatus() != PAUSE) || (!isFullScreenNow))
                     return false;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -166,6 +166,7 @@ public class VideoPlayer extends RelativeLayout {
                         float endY = event.getX();
                         mMoveDistance = (int) (endY - mStartX);
                         if (mControlView.getVisibility() != VISIBLE) {
+                            LogUtil.print(mManager.getDuration());
                             if (mManager.getDuration() <= 0 || mTotalWidth <= 0) {
                                 break;
                             }
@@ -265,10 +266,10 @@ public class VideoPlayer extends RelativeLayout {
                 mTotalWidth = mManager.getVideoWidth();
                 mRootView.setFocusable(true);
                 mRootView.setClickable(true);
-                mProgressBar.setMax((int) mManager.getDuration());
-                mBottomProgressBar.setMax((int) mManager.getDuration());
-                mTotalTime.setText(formatTime((int) mManager.getDuration()));
-                mCurrentTime.setText(formatTime((int) mManager.getCurrentPosition()));
+                mProgressBar.setMax(mManager.getDuration());
+                mBottomProgressBar.setMax(mManager.getDuration());
+                mTotalTime.setText(formatTime(mManager.getDuration()));
+                mCurrentTime.setText(formatTime(mManager.getCurrentPosition()));
                 hideLoadingBar();
                 setBackgroundVisibility(INVISIBLE);
                 play();
@@ -297,7 +298,8 @@ public class VideoPlayer extends RelativeLayout {
 
             @Override
             public void onError(int what, int extra) {
-                LogUtil.printf("on error what = %s", what);
+                LogUtil.printf("on error what = %s, extra = %s", what, extra);
+                // TODO: 2017/2/27 && what != 1
                 if (what != -38) {
                     mRootView.setFocusable(true);
                     mRootView.setClickable(true);
@@ -545,12 +547,14 @@ public class VideoPlayer extends RelativeLayout {
                         @Override
                         public void run() {
                             if (mManager.getPlayStatus() == PLAYING) {
-                                int currentPos = (int) mManager.getCurrentPosition();
+                                int currentPos = mManager.getCurrentPosition();
                                 mProgressBar.setProgress(currentPos);
                                 mBottomProgressBar.setProgress(currentPos);
                                 mCurrentTime.setText(formatTime(currentPos));
-                                if (!mCurrentTime.getText().toString().isEmpty() && mCurrentTime.getText().toString().equals(mTotalTime.getText().toString()))
+                                if (!mCurrentTime.getText().toString().isEmpty() && mCurrentTime.getText().toString().equals(mTotalTime.getText().toString())) {
                                     mPlayListener.onCompletion();
+                                    LogUtil.print("on play completion!");
+                                }
                             }
                         }
                     });

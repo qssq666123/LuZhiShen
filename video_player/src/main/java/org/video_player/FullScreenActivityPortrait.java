@@ -5,4 +5,5 @@ package org.video_player;
  */
 
 public class FullScreenActivityPortrait extends FullScreenActivityLandscape {
+    //do nothing
 }
